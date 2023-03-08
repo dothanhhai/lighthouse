@@ -66,7 +66,7 @@ class LargestContentfulPaintElement extends Audit {
     let lcpLoadEndTs = undefined;
 
 
-    if ('optimisticGraph' in metricResult) {
+    if ('pessimisticGraph' in metricResult) {
       metricResult.pessimisticGraph.traverse(node => {
         if (node.isMainDocument()) {
           firstByteTs = node.startTime;
