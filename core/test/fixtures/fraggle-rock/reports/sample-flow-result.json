@@ -1494,32 +1494,70 @@
             "scoreDisplayMode": "informative",
             "displayValue": "1 element found",
             "details": {
-              "type": "table",
-              "headings": [
-                {
-                  "key": "node",
-                  "valueType": "node",
-                  "label": "Element"
-                }
-              ],
+              "type": "list",
               "items": [
                 {
-                  "node": {
-                    "type": "node",
-                    "lhId": "page-0-IMG",
-                    "path": "1,HTML,1,BODY,0,DIV,0,DIV,4,IMG",
-                    "selector": "body > div#__next > div.flex > img.h-32",
-                    "boundingRect": {
-                      "top": 192,
-                      "bottom": 320,
-                      "left": 38,
-                      "right": 322,
-                      "width": 284,
-                      "height": 128
+                  "type": "table",
+                  "headings": [
+                    {
+                      "key": "node",
+                      "valueType": "node",
+                      "label": "Element"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "node": {
+                        "type": "node",
+                        "lhId": "page-0-IMG",
+                        "path": "1,HTML,1,BODY,0,DIV,0,DIV,4,IMG",
+                        "selector": "body > div#__next > div.flex > img.h-32",
+                        "boundingRect": {
+                          "top": 192,
+                          "bottom": 320,
+                          "left": 38,
+                          "right": 322,
+                          "width": 284,
+                          "height": 128
+                        },
+                        "snippet": "<img src=\"/logo-text.svg\" class=\"h-32 sm:h-44 mt-12 md:mt-24 mb-8 lg:mb-16\" alt=\"Mike's Cereal Shack Logo\">",
+                        "nodeLabel": "Mike's Cereal Shack Logo"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "table",
+                  "headings": [
+                    {
+                      "key": "phase",
+                      "valueType": "text",
+                      "label": "Phase"
                     },
-                    "snippet": "<img src=\"/logo-text.svg\" class=\"h-32 sm:h-44 mt-12 md:mt-24 mb-8 lg:mb-16\" alt=\"Mike's Cereal Shack Logo\">",
-                    "nodeLabel": "Mike's Cereal Shack Logo"
-                  }
+                    {
+                      "key": "timing",
+                      "valueType": "ms",
+                      "label": "Timing"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "phase": "TTFB",
+                      "timing": 5.4
+                    },
+                    {
+                      "phase": "Load Delay",
+                      "timing": 231.269
+                    },
+                    {
+                      "phase": "Load Time",
+                      "timing": 18.476
+                    },
+                    {
+                      "phase": "Render Delay",
+                      "timing": 1096.9619999999998
+                    }
+                  ]
                 }
               ]
             }
@@ -6597,7 +6635,7 @@
               }
             ],
             "core/lib/i18n/i18n.js | columnElement": [
-              "audits[largest-contentful-paint-element].details.headings[0].label",
+              "audits[largest-contentful-paint-element].details.items[0].headings[0].label",
               "audits[lcp-lazy-loaded].details.headings[0].label",
               "audits[layout-shift-elements].details.headings[0].label",
               "audits[dom-size].details.headings[1].label"
@@ -17341,32 +17379,70 @@
             "scoreDisplayMode": "informative",
             "displayValue": "1 element found",
             "details": {
-              "type": "table",
-              "headings": [
-                {
-                  "key": "node",
-                  "valueType": "node",
-                  "label": "Element"
-                }
-              ],
+              "type": "list",
               "items": [
                 {
-                  "node": {
-                    "type": "node",
-                    "lhId": "page-0-IMG",
-                    "path": "1,HTML,1,BODY,0,DIV,0,DIV,3,MAIN,2,DIV,0,IMG",
-                    "selector": "div.flex > main#main-content > div.flex > img.rounded-md",
-                    "boundingRect": {
-                      "top": 228,
-                      "bottom": 388,
-                      "left": 38,
-                      "right": 322,
-                      "width": 284,
-                      "height": 160
+                  "type": "table",
+                  "headings": [
+                    {
+                      "key": "node",
+                      "valueType": "node",
+                      "label": "Element"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "node": {
+                        "type": "node",
+                        "lhId": "page-0-IMG",
+                        "path": "1,HTML,1,BODY,0,DIV,0,DIV,3,MAIN,2,DIV,0,IMG",
+                        "selector": "div.flex > main#main-content > div.flex > img.rounded-md",
+                        "boundingRect": {
+                          "top": 228,
+                          "bottom": 388,
+                          "left": 38,
+                          "right": 322,
+                          "width": 284,
+                          "height": 160
+                        },
+                        "snippet": "<img class=\"rounded-md h-40 sm:h-48 md:h-60 lg:h-80\" src=\"/oscar-actually.jpg\">",
+                        "nodeLabel": "div.flex > main#main-content > div.flex > img.rounded-md"
+                      }
+                    }
+                  ]
+                },
+                {
+                  "type": "table",
+                  "headings": [
+                    {
+                      "key": "phase",
+                      "valueType": "text",
+                      "label": "Phase"
                     },
-                    "snippet": "<img class=\"rounded-md h-40 sm:h-48 md:h-60 lg:h-80\" src=\"/oscar-actually.jpg\">",
-                    "nodeLabel": "div.flex > main#main-content > div.flex > img.rounded-md"
-                  }
+                    {
+                      "key": "timing",
+                      "valueType": "ms",
+                      "label": "Timing"
+                    }
+                  ],
+                  "items": [
+                    {
+                      "phase": "TTFB",
+                      "timing": 4.448
+                    },
+                    {
+                      "phase": "Load Delay",
+                      "timing": 32.946
+                    },
+                    {
+                      "phase": "Load Time",
+                      "timing": 29.370000030517577
+                    },
+                    {
+                      "phase": "Render Delay",
+                      "timing": 1736.2451999694824
+                    }
+                  ]
                 }
               ]
             }
@@ -22483,7 +22559,7 @@
               }
             ],
             "core/lib/i18n/i18n.js | columnElement": [
-              "audits[largest-contentful-paint-element].details.headings[0].label",
+              "audits[largest-contentful-paint-element].details.items[0].headings[0].label",
               "audits[lcp-lazy-loaded].details.headings[0].label",
               "audits[dom-size].details.headings[1].label"
             ],

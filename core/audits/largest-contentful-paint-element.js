@@ -6,6 +6,11 @@
 
 import {Audit} from './audit.js';
 import * as i18n from '../lib/i18n/i18n.js';
+import {LargestContentfulPaint} from '../computed/metrics/largest-contentful-paint.js';
+import {ProcessedNavigation} from '../computed/processed-navigation.js';
+import PrioritizeLcpImage from './prioritize-lcp-image.js';
+import {NetworkRecords} from '../computed/network-records.js';
+import {MainResource} from '../computed/main-resource.js';
 
 const UIStrings = {
   /** Descriptive title of a diagnostic audit that provides the element that was determined to be the Largest Contentful Paint. */
@@ -28,15 +33,90 @@ class LargestContentfulPaintElement extends Audit {
       description: str_(UIStrings.description),
       scoreDisplayMode: Audit.SCORING_MODES.INFORMATIVE,
       supportedModes: ['navigation'],
-      requiredArtifacts: ['traces', 'TraceElements'],
+      requiredArtifacts:
+        ['traces', 'TraceElements', 'devtoolsLogs', 'GatherContext', 'settings', 'URL'],
     };
   }
 
   /**
    * @param {LH.Artifacts} artifacts
-   * @return {LH.Audit.Product}
+   * @param {LH.Audit.Context} context
+   * @return {Promise<LH.Audit.Details.Table|undefined>}
    */
-  static audit(artifacts) {
+  static async makePhaseTable(artifacts, context) {
+    const trace = artifacts.traces[Audit.DEFAULT_PASS];
+    const devtoolsLog = artifacts.devtoolsLogs[Audit.DEFAULT_PASS];
+    const gatherContext = artifacts.GatherContext;
+    const metricComputationData = {trace, devtoolsLog, gatherContext,
+      settings: context.settings, URL: artifacts.URL};
+
+    const networkRecords = await NetworkRecords.request(devtoolsLog, context);
+    const processedNavigation = await ProcessedNavigation.request(trace, context);
+    const metricResult = await LargestContentfulPaint.request(metricComputationData, context);
+
+    const lcpRecord = PrioritizeLcpImage.getLcpRecord(trace, processedNavigation, networkRecords);
+    if (!lcpRecord) return;
+
+    const timeOriginTs = processedNavigation.timestamps.timeOrigin;
+    /** @type {number|undefined} */
+    let firstByteTs = undefined;
+    /** @type {number|undefined} */
+    let lcpLoadStartTs = undefined;
+    /** @type {number|undefined} */
+    let lcpLoadEndTs = undefined;
+
+
+    if ('optimisticGraph' in metricResult) {
+      metricResult.pessimisticGraph.traverse(node => {
+        if (node.isMainDocument()) {
+          firstByteTs = node.startTime;
+        }
+
+        if (firstByteTs !== undefined &&
+            node.type === 'network' &&
+            node.record.requestId === lcpRecord.requestId) {
+          lcpLoadStartTs = node.startTime;
+          lcpLoadEndTs = node.endTime;
+        }
+      });
+    } else {
+      const mainResource = await MainResource.request(metricComputationData, context);
+      if (!mainResource.timing) return;
+
+      firstByteTs = mainResource.timing.receiveHeadersEnd * 1000 + timeOriginTs;
+      lcpLoadStartTs = lcpRecord.networkRequestTime * 1000;
+      lcpLoadEndTs = lcpRecord.networkEndTime * 1000;
+    }
+
+    if (!firstByteTs || !lcpLoadStartTs || !lcpLoadEndTs) return;
+
+    const ttfb = (firstByteTs - timeOriginTs) / 1000;
+    const loadDelay = (lcpLoadStartTs - firstByteTs) / 1000;
+    const loadTime = (lcpLoadEndTs - lcpLoadStartTs) / 1000;
+    const renderDelay = metricResult.timing - loadTime - loadDelay - ttfb;
+
+    const details = [
+      {phase: 'TTFB', timing: ttfb},
+      {phase: 'Load Delay', timing: loadDelay},
+      {phase: 'Load Time', timing: loadTime},
+      {phase: 'Render Delay', timing: renderDelay},
+    ];
+
+    /** @type {LH.Audit.Details.Table['headings']} */
+    const headings = [
+      {key: 'phase', valueType: 'text', label: 'Phase'},
+      {key: 'timing', valueType: 'ms', label: 'Timing'},
+    ];
+
+    return Audit.makeTableDetails(headings, details);
+  }
+
+  /**
+   * @param {LH.Artifacts} artifacts
+   * @param {LH.Audit.Context} context
+   * @return {Promise<LH.Audit.Product>}
+   */
+  static async audit(artifacts, context) {
     const lcpElement = artifacts.TraceElements
       .find(element => element.traceEventType === 'largest-contentful-paint');
     const lcpElementDetails = [];
@@ -51,7 +131,13 @@ class LargestContentfulPaintElement extends Audit {
       {key: 'node', valueType: 'node', label: str_(i18n.UIStrings.columnElement)},
     ];
 
-    const details = Audit.makeTableDetails(headings, lcpElementDetails);
+    const elementTable = Audit.makeTableDetails(headings, lcpElementDetails);
+
+    const items = [elementTable];
+    const phaseTable = await this.makePhaseTable(artifacts, context);
+    if (phaseTable) items.push(phaseTable);
+
+    const details = Audit.makeListDetails(items);
 
     const displayValue = str_(i18n.UIStrings.displayValueElementsFound,
       {nodeCount: lcpElementDetails.length});
