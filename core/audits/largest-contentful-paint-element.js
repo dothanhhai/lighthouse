@@ -54,26 +54,23 @@ class LargestContentfulPaintElement extends Audit {
     const processedNavigation = await ProcessedNavigation.request(trace, context);
     const metricResult = await LargestContentfulPaint.request(metricComputationData, context);
 
+    const mainResource = await MainResource.request(metricComputationData, context);
+    if (!mainResource.timing) return;
+
     const lcpRecord = PrioritizeLcpImage.getLcpRecord(trace, processedNavigation, networkRecords);
     if (!lcpRecord) return;
 
     const timeOriginTs = processedNavigation.timestamps.timeOrigin;
-    /** @type {number|undefined} */
-    let firstByteTs = undefined;
+    const firstByteTs = mainResource.responseHeadersEndTime * 1000;
+
     /** @type {number|undefined} */
     let lcpLoadStartTs = undefined;
     /** @type {number|undefined} */
     let lcpLoadEndTs = undefined;
 
-
     if ('pessimisticGraph' in metricResult) {
       metricResult.pessimisticGraph.traverse(node => {
-        if (node.isMainDocument()) {
-          firstByteTs = node.startTime;
-        }
-
-        if (firstByteTs !== undefined &&
-            node.type === 'network' &&
+        if (node.type === 'network' &&
             node.record.requestId === lcpRecord.requestId) {
           lcpLoadStartTs = node.startTime;
           lcpLoadEndTs = node.endTime;
@@ -83,14 +80,17 @@ class LargestContentfulPaintElement extends Audit {
       const mainResource = await MainResource.request(metricComputationData, context);
       if (!mainResource.timing) return;
 
-      firstByteTs = mainResource.timing.receiveHeadersEnd * 1000 + timeOriginTs;
       lcpLoadStartTs = lcpRecord.networkRequestTime * 1000;
       lcpLoadEndTs = lcpRecord.networkEndTime * 1000;
     }
 
-    if (!firstByteTs || !lcpLoadStartTs || !lcpLoadEndTs) return;
+    if (!lcpLoadStartTs || !lcpLoadEndTs) return;
 
+    // Technically TTFB is calculated from when the main document request was initiated, not the last navigation start event.
+    // However, our LCP is calculated from the last navigation start event and we want these phases to always add up to LCP.
+    // In theory, the difference between the initial request time and navigation start event should be small.
     const ttfb = (firstByteTs - timeOriginTs) / 1000;
+
     const loadDelay = (lcpLoadStartTs - firstByteTs) / 1000;
     const loadTime = (lcpLoadEndTs - lcpLoadStartTs) / 1000;
     const renderDelay = metricResult.timing - loadTime - loadDelay - ttfb;
