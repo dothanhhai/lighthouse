@@ -77,9 +77,6 @@ class LargestContentfulPaintElement extends Audit {
         }
       }
     } else {
-      const mainResource = await MainResource.request(metricComputationData, context);
-      if (!mainResource.timing) return;
-
       lcpLoadStartTs = lcpRecord.networkRequestTime * 1000;
       lcpLoadEndTs = lcpRecord.networkEndTime * 1000;
     }
