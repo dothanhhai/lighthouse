@@ -53,9 +53,7 @@ class LargestContentfulPaintElement extends Audit {
     const networkRecords = await NetworkRecords.request(devtoolsLog, context);
     const processedNavigation = await ProcessedNavigation.request(trace, context);
     const metricResult = await LargestContentfulPaint.request(metricComputationData, context);
-
     const mainResource = await MainResource.request(metricComputationData, context);
-    if (!mainResource.timing) return;
 
     const lcpRecord = PrioritizeLcpImage.getLcpRecord(trace, processedNavigation, networkRecords);
     if (!lcpRecord) return;
