@@ -68,14 +68,14 @@ class LargestContentfulPaintElement extends Audit {
     /** @type {number|undefined} */
     let lcpLoadEndTs = undefined;
 
-    if ('pessimisticGraph' in metricResult) {
-      metricResult.pessimisticGraph.traverse(node => {
+    if ('pessimisticEstimate' in metricResult) {
+      for (const [node, timing] of metricResult.pessimisticEstimate.nodeTimings) {
         if (node.type === 'network' &&
             node.record.requestId === lcpRecord.requestId) {
-          lcpLoadStartTs = node.startTime;
-          lcpLoadEndTs = node.endTime;
+          lcpLoadStartTs = timing.startTime * 1000 + timeOriginTs;
+          lcpLoadEndTs = timing.endTime * 1000 + timeOriginTs;
         }
-      });
+      }
     } else {
       const mainResource = await MainResource.request(metricComputationData, context);
       if (!mainResource.timing) return;
