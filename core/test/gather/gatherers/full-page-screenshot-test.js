@@ -166,7 +166,7 @@ describe('FullPageScreenshot gatherer', () => {
   it('limits the screenshot height to the max Chrome can capture', async () => {
     const fpsGatherer = new FullPageScreenshotGatherer();
 
-    contentSize = {width: 100000, height: 100000};
+    contentSize = {width: 412, height: 100000};
     screenSize = {width: 412, height: 412, dpr: 1};
     mockContext.settings = {
       ...mockContext.settings,
