@@ -122,9 +122,9 @@ class FullPageScreenshot extends FRGatherer {
     return {
       data,
       // Since we resized emulated viewport to match the desired screenshot size,
-      // it is safe to rely on visual viewport css dimensions.
-      width: metrics.cssVisualViewport.clientWidth,
-      height: metrics.cssVisualViewport.clientHeight,
+      // it is safe to rely on scaled visual viewport css dimensions.
+      width: Math.round(metrics.cssVisualViewport.clientWidth * metrics.cssVisualViewport.scale),
+      height: Math.round(metrics.cssVisualViewport.clientHeight * metrics.cssVisualViewport.scale),
     };
   }
 
