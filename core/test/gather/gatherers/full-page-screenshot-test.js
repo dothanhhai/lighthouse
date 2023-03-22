@@ -147,7 +147,7 @@ describe('FullPageScreenshot gatherer', () => {
         mobile: true,
         deviceScaleFactor: 1,
         height: 1500,
-        width: 500,
+        width: 0,
       })
     );
 
@@ -158,7 +158,7 @@ describe('FullPageScreenshot gatherer', () => {
         mobile: true,
         deviceScaleFactor: 2,
         height: 500,
-        width: 500,
+        width: 0,
       })
     );
   });
@@ -186,7 +186,7 @@ describe('FullPageScreenshot gatherer', () => {
       {
         mobile: true,
         deviceScaleFactor: 1,
-        width: 412, // Horizontal overflow will be clipped to screen size.
+        width: 0,
         height: 16383,
       }
     );
