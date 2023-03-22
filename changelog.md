@@ -1,17 +1,20 @@
-Thanks to our new contributors 👽🐷🐰🐯🐻! 
-Jongwoo Han @jongwooo
-Henry Lim @limhenry
-Sepehr Safari @sepehr-safari
- <a name="10.1.0"></a>
+<a name="10.1.0"></a>
 # 10.1.0 (2023-03-22)
 [Full Changelog](https://github.com/GoogleChrome/lighthouse/compare/v10.0.2...v10.1.0)
 
-~~ TODO: https://chromiumdash.appspot.com/schedule ~~
-We expect this release to ship in the DevTools of [Chrome XX](https://chromiumdash.appspot.com/schedule), and to PageSpeed Insights within 2 weeks.
+We expect this release to ship in the DevTools of [Chrome 113](https://chromiumdash.appspot.com/schedule), and to PageSpeed Insights within 2 weeks.
+
+## New Contributors
+
+Thanks to our new contributors 👽🐷🐰🐯🐻!
+
+- Jongwoo Han @jongwooo
+- Henry Lim @limhenry
+- Sepehr Safari @sepehr-safari
 
 ## Notable Changes
-~~ TODO: Move notable changes here ~~
 
+* report: group third-party entities ([#14655](https://github.com/GoogleChrome/lighthouse/pull/14655))
 
 ## Core
 
@@ -29,7 +32,6 @@ We expect this release to ship in the DevTools of [Chrome XX](https://chromiumda
 ## Report
 
 * update table hover shades ([#14873](https://github.com/GoogleChrome/lighthouse/pull/14873))
-* group third-party entities ([#14655](https://github.com/GoogleChrome/lighthouse/pull/14655))
 * consistently use our monospace font stack ([#14842](https://github.com/GoogleChrome/lighthouse/pull/14842))
 
 ## Deps
